@@ -1,0 +1,10 @@
+{
+  "name": "Badge",
+  "app_id": "",
+  "proxies": [
+    {
+      "path": "/calendarevents",
+      "proxyUrl": "http://10.141.133.127:8080/badge-service/rest/calendarevents"
+    }
+  ]
+}
