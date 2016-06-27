@@ -1,35 +1,39 @@
 <ion-view view-title="Profila">
 	<ion-content padding="true" >
-		<div>
-			<table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
-				<thead>
-				<tr>
-					<th st-sort="userfirsname">FirstName</th>
-					<th st-sort="getters.lastname">LastName</th>
-					<th st-sort="getters.username">Username</th>
-					<th st-sort="getters.password">Password</th>
-					<th st-sort="getters.profile">Profile</th>
-					<th >Modifica</th>
-				</tr>
+		<div id="exportable">
+			<br>
+			<br>
+			<table ng-table="demo.tableParams" class="table table-condensed table-bordered table-striped" width="100%">
 
-				</thead>
-				<tbody>
-				<tr ng-repeat="row in users">
+				<tr align="center" style='font-weight:bold;'>
+					<td>NOME</td>
+					<td>COGNOME</td>
+					<td>USERNAME</td>
+					<td>PASSWORD</td>
+					<td>PROFILO</td>
+					<td>MODIFICA</td>
+				</tr>
+				<tbody align="center">
+				<tr ng-repeat="row in users" >
 					<td>{{row.firstname}}</td>
 					<td>{{row.lastname}}</td>
 					<td>{{row.username}}</td>
 					<td>{{row.password}}</td>
 					<td>{{row.profile}}</td>
-					<td>
-						<button type="button" class="btn btn-warning">Modifica</button>
-					</td>
+					<td><button type="button" ng-click="modifica(row)" class="btn btn-warning">Modifica</button></td>
 				</tr>
-				</tbody>
+				<tbody>
 			</table>
-			<button type="button" ng-click="addUser()" class="btn btn-sm btn-success">
-				<i class="glyphicon glyphicon-plus">
-				</i> Aggiungi Utente
-			</button>
 		</div>
+		<br>
+		<button type="button" ng-click="addUser()" class="btn btn-sm btn-success">
+			<i class="glyphicon glyphicon-plus">
+			</i> Aggiungi Utente
+		</button>
+		<button type="button" ng-click="exportData()" class="btn btn-sm btn-success">
+			<i class="glyphicon glyphicon-plus">
+			</i> Esporta
+		</button>
+
 	</ion-content>
 </ion-view>

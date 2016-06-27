@@ -12,16 +12,16 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
   $scope.loginData = {};
 
   $scope.logout = function() {
-    alert('vecchio logout:  ' + $rootScope.titleHeader); //alert
+    //alert('vecchio logout:  ' + $rootScope.titleHeader); //alert
     $rootScope.titleHeader = 'Login';
     $scope.loginData = {};
     $rootScope.userLogged = undefined;
-    alert('nuovo logout:  ' + $rootScope.titleHeader);  //alert
+    //alert('nuovo logout:  ' + $rootScope.titleHeader);  //alert
   };
 
   // Perform the login action when the user submits the login form
   $scope.login = function() {
-    alert('vecchio login:  ' + $rootScope.titleHeader);  //alert
+    //alert('vecchio login:  ' + $rootScope.titleHeader);  //alert
     console.log('Doing login', $scope.loginData);
 
     for (var i = 0; i < $rootScope.users.length; i++) {
@@ -46,7 +46,8 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
       console.log('Nessun utente trovato per i parametri inseriti');
       alert('Utente non trovato');
     }
-      alert('nuovo login:  ' + $rootScope.titleHeader); //alert
+      //1
+      // alert('nuovo login:  ' + $rootScope.titleHeader); //alert
   };
 
 })
@@ -689,17 +690,126 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
   };
 })
 
-.controller('ProfilaCtrl', function($scope) {
-    /*
-    $scope.otherProfiles = [{profile: 'admin' },{profile: 'admin' },{profile: 'admin' }}
-    ];*/
+.controller('ProfilaCtrl', function($scope,$rootScope,$ionicPopup, $timeout) {
+
+    $rootScope.list = { p: '0', p: '1', p: '2',};
+
+
+
+
+
+    $scope.exportData = function () {
+        var blob = new Blob([document.getElementById('exportable').innerHTML], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
+        });
+        saveAs(blob, "Table.xls");
+    };
+
 
 
     //add to the real data holder
-    $scope.addUser = function addUser() {/*
+    /*$scope.addUser = function addUser() {
         $scope.rowCollection.push(generateRandomItem(id));
         id++;*/
+    $scope.modifica = function (row) {
+
+        var myPopup = $ionicPopup.show({
+            templateUrl: '/templates/myPopup.html',
+
+
+            title: 'Modifica utente',
+            scope: $scope,
+            buttons: [
+                { text: 'Annulla' },
+                {
+                    text: '<b>Save</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        if(true) {
+                            e.preventDefault();
+                            console.log('Nuovo', row);
+
+                            myPopup.close();
+                        }
+                        else {
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Alert',
+                                template: 'Inserire tutti i campi'
+                            });
+                            alertPopup.then(function(res) {
+                                // Custom functionality....
+                            });
+                        }
+                    }
+                }
+            ]
+        });
+
+        $timeout(function() {
+            myPopup.close(); //close the popup after 10 seconds for some reason
+        }, 500000);
+
+
+        
     };
+
+
+
+    $scope.addUser = function() {
+        $rootScope.newUser = {};
+        var myPopup = $ionicPopup.show({
+            template: '<span class="input-label">Nome</span>' +
+                      '<input type="text" ng-model="newUser.firstname" >'+
+                      '<span class="input-label">Cognome</span>' +
+                      '<input type="text" ng-model="newUser.lastname">'+
+                      '<span class="input-label">Username</span>' +
+                      '<input type="text" ng-model="newUser.username">'+
+                      '<span class="input-label">Password</span>' +
+                      '<input type="password" ng-model="newUser.password">'+
+                      '<span class="input-label">Profilo</span>' +
+                      '<select type="text" ng-model="newUser.profile">' +
+                        '<option>admin</option>' +
+                        '<option>manager</option>' +
+                        '<option selected="selected">user</option>' +
+                     '</select>',
+
+            title: 'Aggiungi nuovo utente',
+            subTitle: 'Inserisci tutti i campi',
+            scope: $scope,
+            buttons: [
+                { text: 'Annulla' },
+                {
+                    text: '<b>Save</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        if($scope.newUser.firstname && $scope.newUser.lastname  && $scope.newUser.username  && $scope.newUser.password && $scope.newUser.profile != null) {
+                            e.preventDefault();
+                            console.log('Nuovo', $scope.newUser);
+                            $rootScope.users.push($rootScope.newUser);
+                            myPopup.close();
+                        }
+                        else {
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Alert',
+                                template: 'Inserire tutti i campi'
+                            });
+                            alertPopup.then(function(res) {
+                                // Custom functionality....
+                            });
+                        }
+                    }
+                }
+            ]
+        });
+
+            $timeout(function() {
+                myPopup.close(); //close the popup after 10 seconds for some reason
+            }, 500000);
+
+        };
+
+
+
 
     //remove to the real data holder
     $scope.removeItem = function removeItem(row) {/*
@@ -709,6 +819,54 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
         }*/
     }
 
+    angular.module("myApp", ["ngTable", "ngTableDemos"]);
+
+    (function() {
+        "use strict";
+
+        angular.module("myApp").controller("demoController", demoController);
+
+        demoController.$inject = ["NgTableParams", "ngTableSimpleList"];
+
+        function demoController(NgTableParams, simpleList) {
+            this.tableParams = new NgTableParams({}, {
+                dataset: simpleList
+            });
+        }
+    })();
+
+    (function() {
+        "use strict";
+
+        angular.module("myApp").controller("dynamicDemoController", dynamicDemoController);
+        dynamicDemoController.$inject = ["NgTableParams", "ngTableSimpleList"];
+
+        function dynamicDemoController(NgTableParams, simpleList) {
+            var self = this;
+
+            self.cols = [
+                { field: "name", title: "Name", sortable: "name", filter: { name: "text" }, show: true },
+                { field: "age", title: "Age", sortable: "age", filter: { age: "number" }, show: true },
+                { field: "money", title: "Money", sortable: "money", filter: { money: "number" }, show: true }
+            ];
+            self.tableParams = new NgTableParams({}, {
+                dataset: simpleList
+            });
+        }
+    })();
+
+    (function() {
+        "use strict";
+
+        angular.module("myApp").run(configureDefaults);
+        configureDefaults.$inject = ["ngTableDefaults"];
+
+        function configureDefaults(ngTableDefaults) {
+            ngTableDefaults.params.count = 5;
+            ngTableDefaults.settings.counts = [];
+        }
+    })();
+    
 })
 
 .controller('GestioneCtrl', function($scope) {
@@ -735,13 +893,18 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
                     type: 'button-positive',
                     onTap: function(e) {
                         if($scope.loginData.newPassword1 != $scope.loginData.newPassword2) {
-                            e.preventDefault();
                             console.log('Password diverse, inserire nei campi password identiche');
-                           // $ionicPopup.show({ Password });
+                            e.preventDefault();
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Alert',
+                                template: 'Password diverse'
+                            });
+
+                            alertPopup.then(function(res) {
+                                // Custom functionality....
+                            });
                         }
                         else {
-                            //$rootScope.userLogged.password = $scope.loginData.newPassword1;
-                            //console.log('Corrente',$rootScope.users[$rootScope.userLogged.id].password);
                             $rootScope.users[$rootScope.userLogged.id].password = $scope.loginData.newPassword2;
                             $rootScope.users[$rootScope.userLogged.id].password = $scope.loginData.newPassword1;
                             console.log('Cambiata', $scope.loginData.newPassword2);
