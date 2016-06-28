@@ -30,12 +30,12 @@ angular.module('badge', ['ionic', 'ngResource', 'badge.controllers', 'badge.serv
     controller: 'AppCtrl'
   })
 
-  .state('app.loginNew', {
-    url: "/loginNew",
+  .state('app.login', {
+    url: "/login",
     views: {
       'menuContent': {
-        templateUrl: "templates/loginNew.html",
-        controller: 'CalendarCtrl'
+        templateUrl: "templates/login.html",
+        controller: 'LoginCtrl'
       }
     }
   })
@@ -81,5 +81,5 @@ angular.module('badge', ['ionic', 'ngResource', 'badge.controllers', 'badge.serv
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/loginNew');
+  $urlRouterProvider.otherwise('/app/login');
 });

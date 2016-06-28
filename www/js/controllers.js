@@ -1,6 +1,11 @@
 angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
 
-.controller('AppCtrl',function($scope, $rootScope, uiCalendarConfig) {
+.controller('AppCtrl',function($scope, $rootScope) {
+
+  $rootScope.titleHeader = 'Login';
+
+  $scope.loginData = {};
+
   $rootScope.users = [{id: '0', firstname:'super', lastname:'user', username:'super_user', password:'super', profile:'admin'},
                       {id: '1', code:1, firstname:'serena', lastname:'ardissone', username:'sardissone', password:'serena', profile:'user', qualify:'IMP'},
                       {id: '2', code:2, firstname:'pasquale', lastname:'zannino', username:'pzannino', password:'pasquale', profile:'user', qualify:'IMP'},
@@ -8,676 +13,56 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
                       {id: '4', firstname:'carlo', lastname:'siciliano', username:'csiciliano', password:'carlo', profile:'manager', qualify:'DIR'}
   ];
 
-  $rootScope.titleHeader = 'Login';
-  $scope.loginData = {};
+   // Perform the login action when the user submits the login form
+  $scope.login = function() {
+        //alert('vecchio login:  ' + $rootScope.titleHeader);  //alert
+        console.log('Doing login', $scope.loginData);
+
+        for (var i = 0; i < $rootScope.users.length; i++) {
+            if($rootScope.users[i].username==$scope.loginData.username && $rootScope.users[i].password==$scope.loginData.password){
+                $rootScope.userLogged = $rootScope.users[i];
+            }
+        };
+
+        if ($rootScope.userLogged) {
+            $rootScope.titleHeader = 'Dashboard';
+            console.log('Utente ' + $rootScope.userLogged.username + ' loggato con successo');
+            $rootScope.eventFilter.user = $rootScope.userLogged.id;
+            if($rootScope.userLogged.profile=='admin'){
+                $rootScope.eventCategories = [{id:1, name:'Donatori Sangue'}, {id:2, name:'Permesso'}, {id:3, name:'Malattia'}, {id:4, name:'Allattamento'}, {id:5, name:'Ferie'}, {id:6, name:'Lavoro Straordinario'}, {id:7, name:'Festa'}, {id:8, name:'Chiusura'}];
+            }
+            //$rootScope.searchEvents('myCalendar1');
+            //$rootScope.searchEventsByFilters();
+            //uiCalendarConfig.calendars['myCalendar1'].fullCalendar( 'addEventSource', $rootScope.userEvents );
+            //uiCalendarConfig.calendars['myCalendar1'].fullCalendar('refetchEvents');
+            //uiCalendarConfig.calendars['myCalendar1'].fullCalendar('render');
+        }else{
+            console.log('Nessun utente trovato per i parametri inseriti');
+            alert('Utente non trovato');
+        }
+        // alert('nuovo login:  ' + $rootScope.titleHeader); //alert
+    };
 
   $scope.logout = function() {
-    //alert('vecchio logout:  ' + $rootScope.titleHeader); //alert
+    //('vecchio logout:  ' + $rootScope.titleHeader); //alert
     $rootScope.titleHeader = 'Login';
     $scope.loginData = {};
     $rootScope.userLogged = undefined;
-    //alert('nuovo logout:  ' + $rootScope.titleHeader);  //alert
+    //('nuovo logout:  ' + $rootScope.titleHeader);  //alert
   };
-
-  // Perform the login action when the user submits the login form
-  $scope.login = function() {
-    //alert('vecchio login:  ' + $rootScope.titleHeader);  //alert
-    console.log('Doing login', $scope.loginData);
-
-    for (var i = 0; i < $rootScope.users.length; i++) {
-      if($rootScope.users[i].username==$scope.loginData.username && $rootScope.users[i].password==$scope.loginData.password){
-        $rootScope.userLogged = $rootScope.users[i];
-      }
-    };
-
-    if ($rootScope.userLogged) {
-      $rootScope.titleHeader = 'Dashboard';
-      console.log('Utente ' + $rootScope.userLogged.username + ' loggato con successo');
-      $rootScope.eventFilter.user = $rootScope.userLogged.id;
-      if($rootScope.userLogged.profile=='admin'){
-        $rootScope.eventCategories = [{id:1, name:'Donatori Sangue'}, {id:2, name:'Permesso'}, {id:3, name:'Malattia'}, {id:4, name:'Allattamento'}, {id:5, name:'Ferie'}, {id:6, name:'Lavoro Straordinario'}, {id:7, name:'Festa'}, {id:8, name:'Chiusura'}];
-      }
-      //$rootScope.searchEvents('myCalendar1');
-      $rootScope.searchEventsByFilters();
-      //uiCalendarConfig.calendars['myCalendar1'].fullCalendar( 'addEventSource', $rootScope.userEvents );
-      //uiCalendarConfig.calendars['myCalendar1'].fullCalendar('refetchEvents');
-      //uiCalendarConfig.calendars['myCalendar1'].fullCalendar('render');
-    }else{
-      console.log('Nessun utente trovato per i parametri inseriti');
-      alert('Utente non trovato');
-    }
-      //1
-      // alert('nuovo login:  ' + $rootScope.titleHeader); //alert
-  };
-
 })
 
-.controller('CalendarCtrl', function($scope, $rootScope, $stateParams, $ionicModal, $compile, $filter, $window, uiCalendarConfig, popupService, CalendarEvent) {
+.controller('LoginCtrl', function($scope, $rootScope) {
 
-      $scope.showEventTitle = false;
+    $rootScope.eventFilter = {};
+})
 
-      $scope.showCalendar = true;
-      $scope.showEventCalendar = function(){
-        $scope.showCalendar = !$scope.showCalendar;
-      }
+.controller('BadgeCtrl', function($scope, $rootScope) {
 
-      $rootScope.eventCategories = [{id:1, name:'Donatori Sangue'}, {id:2, name:'Permesso'}, {id:3, name:'Malattia'}, {id:4, name:'Allattamento'}, {id:5, name:'Ferie'}, {id:6, name:'Lavoro Straordinario'}];
+  $rootScope.copy = [{nome: 'Permessi Dipendenti', datainizio:'20/01/2016', datafine:'29/12/2016'},
+        {nome: 'Pulizie', datainizio:'22/01/2012', datafine:'29/06/2012'},
+    ];
 
-      /* eventi source that pulls from google.com */
-      $scope.eventSource = {
-        /*
-         url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
-         className: 'gcal-event',           // an option!
-         currentTimezone: 'America/Chicago' // an option!
-         */
-      };
-
-      $rootScope.userEvents = [
-        //{id:1, title: 'AVIS - Donazione sangue',start: new Date(2015, 6, 1), end: new Date(2015, 6, 2), allDay: true, overlap: false, rendering: 'background', color: '#ff9f89', user:1},
-        //{id:2, title: 'Ferie',start: new Date(y, m, 6),end: new Date(y, m, 8), rendering: 'background', color: 'green', user:1},
-        //{id:3, title: 'Permesso',start: new Date(y, m, 15, 16, 0),end: new Date(y, m, 15, 18, 0), allDay: false, color: 'orange', user:1}
-      ];
-      $rootScope.holidays = [];
-      $rootScope.eventSources = [];//$rootScope.userEvents $rootScope.holidays;
-      $rootScope.eventFilter = {};
-
-      $scope.gridOptions = {
-        data: 'userEvents',
-        //showFilter : true,
-        enableColumnResize: true,
-        columnDefs: [{field:'id', displayName:'Id', visible:false},{field:'title', displayName:'Titolo', width:'30%', resizable:true}, {field:'start', displayName:'Dal', cellFilter:'date:\'dd/MM/yyyy HH:mm\'', width:'30%', resizable:true}, {field:'end', displayName:'Al', cellFilter:'date:\'dd/MM/yyyy HH:mm\'', width:'30%', resizable:true},{displayName:'Operazioni',cellTemplate:'<div ng-show="userLogged && userLogged.profile==\'admin\'"><a ng-click="$event.stopPropagation(); delEvent(\'myCalendar1\', row);" >Elimina</a></div>', width:'10%', resizable:true, sortable:false}]
-      };
-      /*
-       function autoColWidth(colDefs, row) {
-       var totalChars = 0;
-       for ( var colName in row) {
-       // Convert numbers to strings here so length will work.
-       totalChars += (new String(row[colName])).length;
-       }
-       colDefs.forEach(function(colDef) {
-       var numChars = (new String(row[colDef.field])).length;
-       colDef.width = (numChars / totalChars * 100) + "%";
-       });
-       return colDefs;
-       }
-       */
-
-      $rootScope.searchHolidays = function(){
-        //uiCalendarConfig.calendars['myCalendar1'].fullCalendar( 'removeEventSource', $rootScope.holidays);
-
-        if($rootScope.holidays && $rootScope.holidays.length>0){
-          $rootScope.holidays.splice(0, $rootScope.holidays.length);
-        }
-
-        CalendarEvent.query({categoryList:[7,8]},
-            function ( CalendarEventResult ) {
-              if(CalendarEventResult.numResults>0){
-                $rootScope.holidays = CalendarEventResult.events;
-                for (var i = 0; i < $rootScope.holidays.length; i++) {
-                  if($rootScope.holidays[i].category == 7){
-                    $rootScope.holidays[i].textColor='white';
-                    $rootScope.holidays[i].color='red';
-                  }else if($rootScope.holidays[i].category == 8){
-                    $rootScope.holidays[i].textColor='white';
-                    $rootScope.holidays[i].color='red';
-                  }
-                  $rootScope.holidays[i].start=new Date($rootScope.holidays[i].start);
-                  $rootScope.holidays[i].end=new Date($rootScope.holidays[i].end);
-                };
-                //uiCalendarConfig.calendars['myCalendar1'].fullCalendar( 'addEventSource', $rootScope.holidays );
-                //uiCalendarConfig.calendars['myCalendar1'].fullCalendar('refetchEvents');
-              }
-            },
-            function(error) {
-              $scope.alertMessage = ('Errore durante la ricerca degli eventi');
-              console.log('error: ' + JSON.stringify(error));
-            }
-        );
-      }
-
-
-      $rootScope.searchEventsByFilters = function(){
-        console.log('searchEventsByFilters INIT');
-        uiCalendarConfig.calendars['myCalendar1'].fullCalendar( 'removeEventSource', $rootScope.userEvents);
-        //$rootScope.userEvents = [];
-        var params = {};
-        if($rootScope.eventFilter.user){
-
-          if($rootScope.userEvents && $rootScope.userEvents.length>0){
-            $rootScope.userEvents.splice(0, $rootScope.userEvents.length);
-          }
-
-          $rootScope.searchHolidays();
-
-          params.userId = $rootScope.eventFilter.user;
-          CalendarEvent.query(params,
-              function ( CalendarEventResult ) {
-                console.log('EVENTI RICEVUTI: ' + JSON.stringify(CalendarEventResult));
-                if(CalendarEventResult.numResults>0){
-                  for (var i = 0; i < CalendarEventResult.events.length; i++) {
-                    var currentCalendarEvent = CalendarEventResult.events[i];
-
-                    var currentUserEvent = {id:currentCalendarEvent.id, title: currentCalendarEvent.title, user:currentCalendarEvent.userid, rendering: 'background', category:currentCalendarEvent.category, start:currentCalendarEvent.start,end:currentCalendarEvent.end};
-
-                    currentUserEvent.start = new Date(currentCalendarEvent.start);
-                    currentUserEvent.end = new Date(currentCalendarEvent.end);
-
-                    if(currentCalendarEvent.category == 1){
-                      //don sangue
-                      currentUserEvent.color = '#ff9f89';
-                    }else if(currentCalendarEvent.category == 2){
-                      //Permesso
-                      currentUserEvent.color = 'orange';
-                    }else if(currentCalendarEvent.category == 3){
-                      //malattia
-                      currentUserEvent.color = 'green';
-                    }else if(currentCalendarEvent.category == 4){
-                      //allattamento
-                      currentUserEvent.color = 'pink';
-                    }else if(currentCalendarEvent.category == 5){
-                      //ferie
-                      currentUserEvent.color = 'brown';
-                    }else if(currentCalendarEvent.category == 6){
-                      // straordinario
-                      currentUserEvent.color = 'red';
-                    }else if(currentCalendarEvent.category == 7){
-                      // festa
-                      //currentUserEvent.textColor='white';
-                      currentUserEvent.color='red';
-                      //$rootScope.holidays.push(currentUserEvent);
-                    }else if(currentCalendarEvent.category == 8){
-                      // chiusura
-                      //currentUserEvent.textColor='white';
-                      currentUserEvent.color='red';
-                      //$rootScope.holidays.push(currentUserEvent);
-                    }
-
-                    console.log('EVENTO FINALE: ' + JSON.stringify(currentUserEvent));
-                    $rootScope.userEvents.push(currentUserEvent);
-
-                  };
-                }
-
-                uiCalendarConfig.calendars['myCalendar1'].fullCalendar( 'addEventSource', $rootScope.userEvents );
-                //uiCalendarConfig.calendars['myCalendar1'].fullCalendar( 'addEventSource', $rootScope.holidays );
-                //uiCalendarConfig.calendars['myCalendar1'].fullCalendar('refetchEvents');
-                //$scope.renderCalender('myCalendar1');
-
-                $scope.alertMessage = (CalendarEventResult.message);
-              },
-              function(error) {
-                $scope.alertMessage = ('Errore durante la ricerca degli eventi');
-                console.log('error: ' + JSON.stringify(error));
-              }
-          )
-        }
-
-        console.log('searchEventsByFilters END');
-        return $rootScope.userEvents;
-      }
-      /*
-       $rootScope.searchEvents = function(calendar){
-       console.log('searchEvents INIT');
-       if($rootScope.eventFilter.user){
-       console.log('Ricerca eventi per utente ' + $rootScope.eventFilter.user);
-       if($rootScope.userEvents && $rootScope.userEvents.length>0){
-       $rootScope.userEvents.splice(0, $rootScope.userEvents.length);
-       }
-       //uiCalendarConfig.calendars[calendar].fullCalendar( 'removeEventSource', $rootScope.userEvents);
-       //uiCalendarConfig.calendars['myCalendar1'].fullCalendar( 'removeEvents', {});
-       $rootScope.searchEventsByFilters();
-       //uiCalendarConfig.calendars[calendar].fullCalendar( 'addEventSource', $rootScope.userEvents );
-       //uiCalendarConfig.calendars[calendar].fullCalendar('refetchEvents');
-       }
-       console.log('searchEvents END');
-       return $rootScope.userEvents;
-       }
-       */
-      /* alert on eventClick */
-      $scope.alertOnEventClick = function( date, jsEvent, view){
-        $scope.alertMessage = (date.title + ' was clicked ');
-      };
-      /* alert on Drop */
-      $scope.alertOnDrop = function(event, delta, revertFunc, jsEvent, ui, view){
-        $scope.alertMessage = ('Event Droped to make dayDelta ' + delta);
-      };
-      /* alert on Resize */
-      $scope.alertOnResize = function(event, delta, revertFunc, jsEvent, ui, view ){
-        $scope.alertMessage = ('Event Resized to make dayDelta ' + delta);
-      };
-
-      $scope.cleanSelectionData = function() {
-        $scope.startDate = undefined;
-        $scope.endDate = undefined;
-        //$scope.dateSelected = undefined;
-        $scope.allDay = undefined;
-        $scope.periodSelected = undefined;
-
-        $scope.newEvent = {};
-        $scope.errorCalendarModal = undefined;
-        $scope.showEventTitle = false;
-
-        $scope.startDate4 = undefined;
-        $scope.startTime4 = undefined;
-        $scope.endDate4 = undefined;
-        $scope.endTime4 = undefined;
-      }
-
-      $scope.showCalendarMessage = function(message) {
-        console.log(message);
-        $scope.alertMessage = (message);
-        //alert(message);
-        document.getElementById("AlertArea").focus();
-      }
-      /* imposta i dati per un evento da inserire o modificare */
-      $scope.buildNewEvent = function() {
-        console.log('buildNewEvent INIT');
-
-        $scope.newEvent.user = $rootScope.userLogged.id;
-
-        var mystartdate4Obj = document.getElementById("startDate4");
-        console.log('mystartdate4Obj: ' + mystartdate4Obj);
-        var mystartdate4 = document.getElementById("startDate4").value;
-        console.log('mystartdate4: ' + mystartdate4);
-        //var mystartdate4Array = mystartdate4.split("-");
-        //$scope.newEvent.start = new Date(mystartdate4Array[0],mystartdate4Array[1],mystartdate4Array[2]);
-
-        var mystartTime4Obj = document.getElementById("startTime4");
-        console.log('mystartTime4Obj: ' + mystartTime4Obj);
-        var mystartTime4 = document.getElementById("startTime4").value;
-        console.log('mystartTime4: ' + mystartTime4);
-
-        //var mystartTime4Array = undefined;
-        //if(mystartTime4){
-        //  mystartTime4Array = mystartTime4.split(":");
-        //  $scope.newEvent.start = new Date(mystartdate4Array[0],mystartdate4Array[1],mystartdate4Array[2], mystartTime4Array[0], mystartTime4Array[1]);
-        //}
-
-        var myendDate4 = document.getElementById("endDate4").value;
-        console.log('myendDate4: ' + myendDate4);
-        var myendTime4 = document.getElementById("endTime4").value;
-        console.log('myendTime4: ' + myendTime4);
-
-        //$scope.newEvent.start = $scope.startDate;
-        var myStartDateStr = mystartdate4+' 00:00:00.000';
-        if(mystartTime4){
-          myStartDateStr = mystartdate4+' '+mystartTime4;
-        }
-        console.log('myStartDateStr: ' + myStartDateStr);
-        var myStartDate = new Date(myStartDateStr);
-
-        console.log('myStartDate: ' + myStartDate);
-        $scope.newEvent.start = myStartDate.getTime();
-        console.log('myStartDateTIME: ' + $scope.newEvent.start);
-        //$scope.newEvent.end = $scope.endDate;
-        var myEndDateStr = myendDate4+' 00:00:00.000';
-        if(myendTime4){
-          myEndDateStr = myendDate4+' '+myendTime4;
-        }
-        console.log('myEndDateStr: ' + myEndDateStr);
-        var myEndDate = new Date(myEndDateStr);
-        console.log('myEndDate: ' + myEndDate);
-        $scope.newEvent.end = myEndDate.getTime();
-        console.log('myEndDateTIME: ' + $scope.newEvent.end);
-
-        if(!$scope.showEventTitle){
-          for (var i = 0; i < $scope.eventCategories.length; i++) {
-            if($scope.eventCategories[i].id==$scope.newEvent.category){
-              $scope.newEvent.title=$scope.eventCategories[i].name;
-              break;
-            }
-          };
-        }
-
-        console.log('EventObj: ' + JSON.stringify($scope.newEvent, null, 2));
-
-        console.log('buildNewEvent END');
-      }
-      /* add custom event*/
-      $scope.updateEvent = function(calendar) {
-        console.log('updateEvent INIT');
-        $scope.buildNewEvent();
-        if($scope.showEventTitle && !$scope.newEvent.title){
-          $scope.errorCalendarModal = 'Titolo evento obbligatorio!';
-        }else if(!$scope.newEvent.start){
-          $scope.errorCalendarModal = 'Data inizio evento obbligatoria!';
-        }else if(!$scope.newEvent.end){
-          $scope.errorCalendarModal = 'Data fine evento obbligatoria!';
-        }else if(!$scope.newEvent.category){
-          $scope.errorCalendarModal = 'Categoria evento obbligatoria!';
-        }else if($scope.newEvent.end < $scope.newEvent.start){
-          $scope.errorCalendarModal = 'La data fine evento precede quella di inizio!';
-        }else{
-
-          if($rootScope.holidays){
-            for (var i = 0; i < $rootScope.holidays.length; i++) {
-              if($scope.newEvent.category != 6 && $scope.newEvent.start < $rootScope.holidays[i].end && $rootScope.holidays[i].start < $scope.newEvent.end){
-                $scope.errorCalendarModal = 'Periodo indicato non valido per questa categoria, include l\'evento ' + $rootScope.holidays[i].title;
-                return;
-              }
-            };
-          }
-
-          if ($scope.newEvent.category != 6 || $scope.newEvent.category != 7 || $scope.newEvent.category != 8) {
-            var startEvent = new Date($scope.newEvent.start);
-            var endEvent = new Date($scope.newEvent.end);
-            while(startEvent < endEvent){
-              var day = startEvent.getDay();
-              if(day == 0 || day == 6) {
-                $scope.errorCalendarModal = 'Periodo indicato non valido per questa categoria, non includere le giornate di sabato o domenica';
-                return;
-              }
-              startEvent.setDate(startEvent.getDate() + 1);
-            }
-          };
-
-          // verifica se l'evento include un evento diverso festa o chiusura
-          CalendarEvent.query({categoryList:[1,2,3,4,5,6], override:true, start:new Date($scope.newEvent.start), end:new Date($scope.newEvent.end)},
-              function ( CalendarEventResult ) {
-                if(CalendarEventResult.numResults>0){
-                  //return  CalendarEventResult.events;
-                  $scope.errorCalendarModal = 'Il nuovo evento si sovrappone all\'evento ' + CalendarEventResult.events[0].title;
-                  return;
-                }
-              },
-              function(error) {
-                $scope.alertMessage = ('Errore durante la ricerca degli eventi');
-                console.log('error: ' + JSON.stringify(error));
-              }
-          );
-
-          $scope.addEvent(calendar);
-        }
-        console.log('updateEvent END');
-      }
-      /* add custom event*/
-      $scope.addEvent = function(calendar) {
-        console.log('addEvent INIT');
-
-        var newCalendarEvent = new CalendarEvent();
-        //newCalendarEvent.id=33;
-        newCalendarEvent.start=$scope.newEvent.start;
-        newCalendarEvent.end=$scope.newEvent.end;
-        newCalendarEvent.title=$scope.newEvent.title;
-        newCalendarEvent.category=$scope.newEvent.category;
-        newCalendarEvent.userid=$scope.newEvent.user;
-        newCalendarEvent.description=$scope.newEvent.note;
-        newCalendarEvent.$save(
-            function(response){
-              $scope.showCalendarMessage('Creato nuovo evento ' + newCalendarEvent.title);
-              $scope.cleanSelectionData();
-              $rootScope.searchEventsByFilters();
-              //$scope.newEvent.color='red';
-              //$rootScope.userEvents.push(newCalendarEvent);
-              console.log('response: ' + JSON.stringify(response));
-            },
-            function(responseError){
-              $scope.showCalendarMessage('Errore durante la creazione dell\'evento ' + newCalendarEvent.title);
-              //console.log('responseError: ' + JSON.stringify(responseError));
-            }
-        );
-
-        //$scope.cleanSelectionData();
-        $scope.closeEventModal();
-        //$scope.renderCalender(calendar);
-
-        console.log('addEvent END');
-      };
-
-      $scope.deleteEventInPopup = '<div><button id="delEventBtn" type="button" class="btn btn-primary" ng-click="delEvent(\'myCalendar1\',row)">Elimina</button></div>';
-
-      $scope.delEvent = function(calendar,row){
-        console.log("Cancellazione evento " + row.entity.title)
-        $scope.deleteEventById(calendar, row.entity.id, row.entity.title);
-      }
-
-      /* remove event */
-      $scope.remove = function(calendar,index) {
-        var eventToRemove = $rootScope.userEvents[index];
-        $scope.deleteEventById(calendar, eventToRemove.id, eventToRemove.title);
-      };
-
-      /* remove event */
-      $scope.deleteEventById = function(calendar,id, title) {
-        var calendarEventToDelete = new CalendarEvent();
-        calendarEventToDelete.id = id;
-
-        console.log("Cancellazione evento " + title + ' ... ');
-        if(popupService.showPopup('Sei sicuro di voler eliminare l\'evento?')){
-          calendarEventToDelete.$delete({id: calendarEventToDelete.id },
-              //function(){
-              //  $scope.showCalendarMessage('Evento ' + eventToRemove.title + ' cancellato.');
-              //  $scope.searchEvents(calendar);
-              //  //$window.location.href='';
-              //},
-              // success callback
-              function (returnValue, responseHeaders) {
-                $scope.showCalendarMessage('Evento ' + title + ' cancellato.');
-                $scope.searchEventsByFilters();
-                console.log('returnValue: ' + JSON.stringify(returnValue));
-                console.log('responseHeaders: ' + JSON.stringify(responseHeaders));
-              },
-              // error callback
-              function (httpResponse) {
-                $scope.showCalendarMessage('Errore durante la cancellato dell\'evento ' + title + '.');
-                console.log('httpResponse: ' + JSON.stringify(httpResponse));
-              }
-          );
-        }
-
-        //$scope.cleanSelectionData();
-        //$scope.renderCalender(calendar);
-      };
-      /* Change View */
-      $scope.changeView = function(view,calendar) {
-        uiCalendarConfig.calendars[calendar].fullCalendar('changeView',view);
-      };
-      /* Change View */
-      $scope.renderCalender = function(calendar) {
-        if(uiCalendarConfig.calendars[calendar]){
-          uiCalendarConfig.calendars[calendar].fullCalendar('render');
-        }
-      };
-      /* Render Tooltip */
-      $scope.eventRender = function( event, element, view ) {
-        //element.attr('title', event.title);
-
-        //element.attr({'tooltip': event.title, 'tooltip-append-to-body': true});
-        //  element.content = {'text': event.title,'title': event.title};
-        //  $compile(element)($scope);
-      };
-      /* config object */
-      $scope.uiConfig = {
-        calendar:{
-          lang: 'it',
-          minTime:'07:00:00',
-          header:{
-            left: 'today prev,next',
-            center: 'title',
-            right: 'month,agendaWeek,agendaDay'
-          },
-          height: 450,
-          editable: false,
-          droppable:false,
-          selectable: true,
-          select: function(start, end, jsEvent, view) {
-            console.log('select INIT');
-
-            $scope.cleanSelectionData();
-
-            /*
-             if(start.hasTime() || end.hasTime()){
-             $scope.newEvent.allDay = false;
-             }else{
-             $scope.newEvent.allDay = true;
-             }
-             */
-
-            $scope.startDate = new Date(start);
-            console.log('start: ' + start);
-            console.log('start formatted: ' + start.format("dddd, MMMM Do YYYY, h:mm:ss a"));
-            console.log('start MOMENT ISO: ' + start.format('YYYY-MM-DD')+'T'+start.format('HH:mm:ss.SSS'));
-            console.log('start dec UTC: ' + $scope.startDate.getUTCFullYear() + '-' + ($scope.startDate.getUTCMonth() + 1) + '-' + $scope.startDate.getUTCDate() + 'T' + $scope.startDate.getUTCHours() + ':' + $scope.startDate.getUTCMinutes() + ':' + $scope.startDate.getUTCSeconds());
-            console.log('start dec LOCALE: ' + $scope.startDate.getDate() + "/" + ($scope.startDate.getMonth()+1)  + "/" + $scope.startDate.getFullYear() + " @ "  + $scope.startDate.getHours() + ":"  + $scope.startDate.getMinutes() + ":" + $scope.startDate.getSeconds());
-
-            $scope.startDate4 = new Date($scope.startDate.getUTCFullYear(), $scope.startDate.getUTCMonth(), $scope.startDate.getUTCDate());
-            $scope.startTime4 = new Date($scope.startDate.getUTCFullYear(), $scope.startDate.getUTCMonth(), $scope.startDate.getUTCDate(), $scope.startDate.getUTCHours(), $scope.startDate.getUTCMinutes());
-
-            //$scope.startTime4 = $scope.startDate.getUTCHours();
-            //if($scope.startTime4<10){
-            //  $scope.startTime4 = $scope.startTime4 +'0'+ $scope.startDate.getUTCHours();
-            //}
-
-            /*$scope.startDate = start;
-             if(start.hasTime()){
-             console.log('start with time');
-             var startTime = start.time();
-             console.log('startTime: ' + startTime);
-             $scope.startdate4 = new Date(start);//.stripZone
-             $scope.startTime4 = new Date(start);
-             }else{
-             console.log('start without time');
-             $scope.startdate4 = new Date(start);
-             }
-             */
-
-            $scope.endDate = new Date(end);
-            console.log('end: ' + end);
-            console.log('end formatted: ' + end.format("dddd, MMMM Do YYYY, h:mm:ss a"));
-            console.log('end MOMENT ISO: ' + end.format('YYYY-MM-DD')+'T'+end.format('HH:mm:ss.SSS'));
-            console.log('end dec UTC: ' + $scope.endDate.getUTCFullYear() + '-' + ($scope.endDate.getUTCMonth() + 1) + '-' + $scope.endDate.getUTCDate() + 'T' + $scope.endDate.getUTCHours() + ':' + $scope.endDate.getUTCMinutes() + ':' + $scope.endDate.getUTCSeconds());
-            console.log('end dec LOCALE: ' + $scope.endDate.getDate() + "/" + ($scope.endDate.getMonth()+1)  + "/" + $scope.endDate.getFullYear() + " @ "  + $scope.endDate.getHours() + ":"  + $scope.endDate.getMinutes() + ":" + $scope.endDate.getSeconds());
-
-            $scope.endDate4 = new Date($scope.endDate.getUTCFullYear(), $scope.endDate.getUTCMonth(), $scope.endDate.getUTCDate());
-            $scope.endTime4 = new Date($scope.endDate.getUTCFullYear(), $scope.endDate.getUTCMonth(), $scope.endDate.getUTCDate(), $scope.endDate.getUTCHours(), $scope.endDate.getUTCMinutes());
-
-            //$scope.endDate4 = new Date(end.stripZone());
-            //$scope.endTime4 = new Date(end.stripZone());
-
-            /*
-             if(end.hasTime()){
-             console.log('end with time');
-             var endTime = end.time();
-             console.log('endTime: ' + endTime);
-             $scope.endDate4 = new Date(end);//.stripZone()
-             $scope.endTime4 = new Date(end);
-             }else{
-             console.log('start without time');
-             $scope.endDate4 = new Date(end);
-             }
-             */
-
-            $scope.periodSelected = true;
-            console.log('select END');
-          },
-          eventClick: $scope.alertOnEventClick,
-          eventDrop: $scope.alertOnDrop,
-          eventResize: $scope.alertOnResize,
-          eventRender: $scope.eventRender,
-          dayRender: function (date, cell) {
-            if($scope.holidays){
-              for (var i = 0; i < $scope.holidays.length; i++) {
-                if (date >= $scope.holidays[i].start && date < $scope.holidays[i].end) {
-                  $(cell).removeClass('ui-widget-content');
-                  $(cell).addClass('holiday');
-                  break;
-                }
-              }
-            }
-          }
-          /*
-           dayClick: function(date, jsEvent, view) {
-           console.log('dayClick INIT');
-           $scope.startDate = date;
-           //$scope.startdate4= new Date(date);
-           $scope.allDay = true;
-           console.log('Selezionato giorno: ' + $scope.startDate.format("dddd, MMMM Do YYYY, h:mm:ss a"));
-           //console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-           //console.log('Current view: ' + view.name);
-
-           //var moment = $('#calendar1').fullCalendar('getDate');
-           //console.log('Moment on: ' + $filter('date')(moment, "dd/MM/yyyy"));
-
-           // change the day's background color just for fun
-           //$(this).css('background-color', 'red');
-           $scope.periodSelected = true;
-           console.log('dayClick END');
-           }
-           */
-        }
-      };
-
-      // Create the login modal that we will use later
-      $ionicModal.fromTemplateUrl('templates/event.html', {
-        scope: $scope
-      }).then(function(modal) {
-        $scope.modalEvent = modal;
-      });
-
-      // Triggered in the login modal to close it
-      $scope.closeEventModal = function() {
-        $scope.modalEvent.hide();
-      };
-
-      // Open the login modal
-      $scope.showEventModal = function() {
-        if(!$scope.newEvent){
-          $scope.newEvent = {};
-        }
-        if(!$scope.startDate4){
-          var now = new Date();
-          $scope.startDate4 = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-          $scope.startTime4 = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 9, 0);
-          $scope.endDate4 = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-          $scope.endTime4 = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 18, 0);
-        }
-        $scope.showEventTitle = false;
-        $scope.modalEvent.show();
-      };
-
-      $scope.changeEventCategory = function() {
-        if($scope.newEvent.category == 1){
-          //don sangue
-          $scope.showEventTitle = false;
-        }else if($scope.newEvent.category == 2){
-          //Permesso
-          $scope.showEventTitle = false;
-        }else if($scope.newEvent.category == 3){
-          //malattia
-          $scope.showEventTitle = false;
-        }else if($scope.newEvent.category == 4){
-          //allattamento
-          $scope.showEventTitle = false;
-        }else if($scope.newEvent.category == 5){
-          //ferie
-          $scope.showEventTitle = false;
-        }else if($scope.newEvent.category == 6){
-          // straordinario
-          $scope.showEventTitle = false;
-        }else if($scope.newEvent.category == 7){
-          // festa
-          $scope.showEventTitle = true;
-        }else if($scope.newEvent.category == 8){
-          // chiusura
-          $scope.showEventTitle = false;
-        }
-      };
-
-      // Perform the login action when the user submits the login form
-      //$scope.updateEvent = function() {
-      //  console.log('Modifica evento: ', $scope.newEvent);
-
-      // Simulate a login delay. Remove this and replace with your login
-      // code if using a login system
-      //  $timeout(function() {
-      //    $scope.closeEventModal();
-      //  }, 1000);
-      //};
-      //-------------------------------------------------------------
-
-    })
-
-.controller('BadgeCtrl', function($scope) {
   $scope.started = false;
   $scope.date = new Date();
 
@@ -690,13 +75,7 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
   };
 })
 
-.controller('ProfilaCtrl', function($scope,$rootScope,$ionicPopup, $timeout) {
-
-    $rootScope.list = { p: '0', p: '1', p: '2',};
-
-
-
-
+.controller('ProfilaCtrl', function($scope, $rootScope, $ionicPopup, $timeout) {
 
     $scope.exportData = function () {
         var blob = new Blob([document.getElementById('exportable').innerHTML], {
@@ -705,36 +84,40 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
         saveAs(blob, "Table.xls");
     };
 
-
-
-    //add to the real data holder
-    /*$scope.addUser = function addUser() {
-        $scope.rowCollection.push(generateRandomItem(id));
-        id++;*/
     $scope.modifica = function (row) {
+        $scope.profileRow = row;
+        $scope.newRow = {};
+        $scope.other2 = 'manager';
+        $scope.other3 = 'user';
+        if($scope.profileRow.profile == 'manager') {
+            $scope.other2 = 'admin';
+        }
+        if($scope.profileRow.profile == 'user') {
+            $scope.other3 = 'admin';
+        }
 
         var myPopup = $ionicPopup.show({
-            templateUrl: '/templates/myPopup.html',
-
-
+            templateUrl: '/templates/modificaPopup.html',
             title: 'Modifica utente',
+            subTitle: 'Inserisci tutti i campi',
             scope: $scope,
             buttons: [
                 { text: 'Annulla' },
                 {
-                    text: '<b>Save</b>',
+                    text: '<b>Modifica</b>',
                     type: 'button-positive',
                     onTap: function(e) {
-                        if(true) {
+                        if($scope.newRow.firstname && $scope.newRow.lastname  && $scope.newRow.profile != null) {
                             e.preventDefault();
-                            console.log('Nuovo', row);
-
+                            $rootScope.users[$scope.profileRow.id].profile = $scope.newRow.profile;
+                            $rootScope.users[$scope.profileRow.id].firstname = $scope.newRow.firstname;
+                            $rootScope.users[$scope.profileRow.id].lastname = $scope.newRow.lastname;
                             myPopup.close();
                         }
                         else {
                             var alertPopup = $ionicPopup.alert({
                                 title: 'Alert',
-                                template: 'Inserire tutti i campi'
+                                template: 'Nessuna modifica'
                             });
                             alertPopup.then(function(res) {
                                 // Custom functionality....
@@ -746,45 +129,25 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
         });
 
         $timeout(function() {
-            myPopup.close(); //close the popup after 10 seconds for some reason
-        }, 500000);
-
-
-        
+            myPopup.close(); //close the popup after 30 seconds for some reason
+        }, 30000);
     };
-
-
 
     $scope.addUser = function() {
         $rootScope.newUser = {};
         var myPopup = $ionicPopup.show({
-            template: '<span class="input-label">Nome</span>' +
-                      '<input type="text" ng-model="newUser.firstname" >'+
-                      '<span class="input-label">Cognome</span>' +
-                      '<input type="text" ng-model="newUser.lastname">'+
-                      '<span class="input-label">Username</span>' +
-                      '<input type="text" ng-model="newUser.username">'+
-                      '<span class="input-label">Password</span>' +
-                      '<input type="password" ng-model="newUser.password">'+
-                      '<span class="input-label">Profilo</span>' +
-                      '<select type="text" ng-model="newUser.profile">' +
-                        '<option>admin</option>' +
-                        '<option>manager</option>' +
-                        '<option selected="selected">user</option>' +
-                     '</select>',
-
+            templateUrl: '/templates/aggiungiUtentePopup.html',
             title: 'Aggiungi nuovo utente',
             subTitle: 'Inserisci tutti i campi',
             scope: $scope,
             buttons: [
                 { text: 'Annulla' },
                 {
-                    text: '<b>Save</b>',
+                    text: '<b>Aggiungi</b>',
                     type: 'button-positive',
                     onTap: function(e) {
                         if($scope.newUser.firstname && $scope.newUser.lastname  && $scope.newUser.username  && $scope.newUser.password && $scope.newUser.profile != null) {
                             e.preventDefault();
-                            console.log('Nuovo', $scope.newUser);
                             $rootScope.users.push($rootScope.newUser);
                             myPopup.close();
                         }
@@ -803,20 +166,17 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
         });
 
             $timeout(function() {
-                myPopup.close(); //close the popup after 10 seconds for some reason
-            }, 500000);
+                myPopup.close(); //close the popup after 60 seconds for some reason
+            }, 60000);
 
         };
 
-
-
-
-    //remove to the real data holder
-    $scope.removeItem = function removeItem(row) {/*
+    /*remove to the real data holder
+    $scope.removeItem = function removeItem(row) {
         var index = $scope.rowCollection.indexOf(row);
         if (index !== -1) {
             $scope.rowCollection.splice(index, 1);
-        }*/
+        }
     }
 
     angular.module("myApp", ["ngTable", "ngTableDemos"]);
@@ -866,13 +226,58 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
             ngTableDefaults.settings.counts = [];
         }
     })();
-    
+    */
 })
 
-.controller('GestioneCtrl', function($scope) {
+.controller('GestioneCtrl', function($scope, $rootScope, $ionicPopup, $timeout) {
+
+    $rootScope.attivita = [{nome: 'Permessi Dipendenti', datainizio:'20/01/2016', datafine:'29/12/2016'},
+        {nome: 'Pulizie', datainizio:'22/01/2012', datafine:'29/06/2012'},
+    ];
+
+    $scope.aggiungiAttivita = function() {
+        $scope.newAttivita = {};
+
+        var myPopup = $ionicPopup.show({
+            templateUrl: '/templates/aggiungiAttivitaPopup.html',
+            title: 'Aggiungi nuova Attività',
+            subTitle: 'Inserisci tutti i campi',
+            scope: $scope,
+            buttons: [
+                { text: 'Annulla' },
+                {
+                    text: '<b>Aggiungi</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        if($scope.newAttivita.nome && $scope.newAttivita.datainizio && $scope.newAttivita.datafine   != null) {
+                            e.preventDefault();
+                            console.log('Attivita', $scope.newAttivita);
+                            $rootScope.attivita.push($scope.newAttivita);
+                            myPopup.close();
+                        }
+                        else {
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Alert',
+                                template: 'Inserire tutti i campi'
+                            });
+                            alertPopup.then(function(res) {
+                                // Custom functionality....
+                            });
+                        }
+                    }
+                }
+            ]
+        });
+
+        $timeout(function() {
+            myPopup.close(); //close the popup after 60 seconds for some reason
+        }, 60000);
+
+    };
 })
 
-.controller('UserCtrl', function($scope, $rootScope) {
+.controller('UserCtrl', function($scope) {
+
 
 })
 
@@ -889,7 +294,7 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
             buttons: [
                 { text: 'Cancel' },
                 {
-                    text: '<b>Save</b>',
+                    text: '<b>Conferma</b>',
                     type: 'button-positive',
                     onTap: function(e) {
                         if($scope.loginData.newPassword1 != $scope.loginData.newPassword2) {
@@ -906,7 +311,6 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
                         }
                         else {
                             $rootScope.users[$rootScope.userLogged.id].password = $scope.loginData.newPassword2;
-                            $rootScope.users[$rootScope.userLogged.id].password = $scope.loginData.newPassword1;
                             console.log('Cambiata', $scope.loginData.newPassword2);
                         }
                     }
@@ -917,8 +321,6 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap'
         $timeout(function() {
             myPopup.close(); //close the popup after 10 seconds for some reason
         }, 10000);
-
     };
-
 });
 /* EOF */

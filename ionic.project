@@ -1,6 +1,6 @@
 {
   "name": "Badge",
-  "app_id": "",
+  "app_id": "d2b932ef",
   "proxies": [
     {
       "path": "/calendarevents",

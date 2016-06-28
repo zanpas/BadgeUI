@@ -42,3 +42,42 @@
     background-color:#ccc;
 }
 
+.popup {
+
+    border: 2px solid darkgray;
+    padding: 2px;
+    border-radius: 10px !important;
+
+}
+
+.popup-head {
+
+    background-color: #e6e6e6;
+}
+
+.popup-title {
+
+}
+
+.popup-body {
+
+    background-color: #ededed;
+
+}
+
+.popup-buttons .button
+{
+    font-size: 14px;
+    font-weight: 500;
+    -webkit-border-radius: 4px;
+    border-radius: 5px !important;
+    cursor: pointer;
+}
+
+/*
+.popup-container {
+
+    background-color: palegoldenrod;
+
+}
+*/

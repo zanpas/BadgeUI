@@ -18,12 +18,12 @@
     </ion-header-bar>
     <ion-content overflow-scrool="true">
       <ion-list>
-        <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/loginNew"  ng-hide="userLogged">
+        <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/login"  ng-hide="userLogged">
           <i class="icon ion-log-in"></i>Login
         </ion-item>
 
         <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/badge" ng-show="userLogged">
-          <i class="icon ion-android-desktop" ></i>Badge
+          <i class="icon ion-card" ></i>Badge
         </ion-item>
 
         <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/profila" ng-show="userLogged.profile=='admin'">
@@ -38,23 +38,9 @@
           <i class="icon ion-wrench"></i>Modifica Password
         </ion-item>
 
-        <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/loginNew" ng-click="logout()" ng-show="userLogged" style="color:red" target="_self">
+        <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/login" ng-click="logout()" ng-show="userLogged" style="color:red" target="_self">
           <i class="icon ion-log-out"></i>Logout
         </ion-item>
-
-        <!--
-        <ion-item nav-clear menu-close href="#/app/users" ng-show="userLogged && userLogged.profile=='admin'">
-          Gestione Impiegati
-        </ion-item>
-
-        <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/roster" ng-show="userLogged && userLogged.profile=='admin'">
-          Registro Presenze
-        </ion-item>
-
-        <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/loginNew">
-          Gestione Eventi
-        </ion-item>
-        -->
       </ion-list>
     </ion-content>
   </ion-side-menu>

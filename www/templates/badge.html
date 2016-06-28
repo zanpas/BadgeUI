@@ -10,20 +10,43 @@
 			<i class="icon ion-clock"></i>Time: {{date | date:'HH:mm'}}
 		</ion-item>
 		<ion-item class="item-icon-left positive">
-			<i class="icon ion-mouse"></i>Attività
-			<select>
-				<option>Attivita1</option>
-				<option>Attivita2</option>
-				<option>Attivita3</option>
-				<option>Attivita4</option>
-			</select>
+			<i class="icon ion-connection-bars"></i>Attività: {{  }}
+			<select >
+			<option>Attivita1</option>
+			<option>Attivita2</option>
+			<option>Attivita3</option>
+			<option>Attivita4</option>
+		</select>
 		</ion-item>
-		<div class="spacer" style="width: 300px; height: 22px;"></div>
-		<ion-item class="item-icon-left positive" id="badge-list-item7" ng-if="!started" ng-click="start()">
-			<i class="icon ion-ios-play"></i>Start
-		</ion-item>
-		<ion-item class="item-icon-left positive" id="badge-list-item7"ng-if="started" ng-click="stop()">
-			<i class="icon ion-ios-play"></i>Stop
-		</ion-item>
+		<div id="exportable">
+			<br>
+			<table ng-table="demo.tableParams" class="table table-condensed table-bordered table-striped" >
+				<tr align="center" style='font-weight:bold;'>
+					<td>NOME</td>
+					<td>DATA INIZIO</td>
+					<td>DATA FINE</td>
+					<td>USER</td>
+					<td>TIPO</td>
+					<td> </td>
+				</tr>
+				<tbody align="center">
+				<tr ng-repeat="row in copy" >
+					<td>{{ row.nome }}</td>
+					<td>{{ row.datainizio }}</td>
+					<td>{{ row.datafine }}</td>
+					<td>{{ }}</td>
+					<td>{{ }}</td>
+					<td>
+						<ion-item class="item-icon-left positive" ng-if="!started" ng-click="start()">
+							<i class="icon ion-ios-play"></i>Start
+						</ion-item>
+						<ion-item class="item-icon-left positive" ng-if="started" ng-click="stop()">
+							<i class="icon ion-ios-pause"></i>Stop
+						</ion-item>
+					</td>
+				</tr>
+				<tbody>
+			</table>
+		</div>
 	</ion-content>
 </ion-view>
