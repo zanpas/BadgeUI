@@ -59,8 +59,18 @@
     border:1px solid  #666666;
     border-spacing:5px;/*cellspacing:poor IE support for  this*/
     /* border-collapse:separate;*/
+    /*table-layout:fixed;
+    word-wrap: break-word;*/
+}
+/*
+.gestione {
+    overflow: scroll;
 }
 
+.profila {
+    overflow: scroll;
+}
+*/
 .divRow
 {
     display:table-row;
@@ -114,4 +124,3 @@
 
 }
 */
-

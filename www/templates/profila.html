@@ -1,6 +1,7 @@
 <ion-view view-title="Profila">
 	<ion-content padding="true">
-		<div id="exportable">
+		<ion-scroll zooming="false" direction="xy" scrollbar-x="true" scrollbar-y="true" min-zoom="1" id="scrolly" style="width: 100%; height: 500px;">
+		<div id="exportableProfile" class="profila">
 			<br>
 			<br>
 			<table ng-table="demo.tableParams" class="table table-condensed table-bordered table-striped" >
@@ -24,12 +25,15 @@
 				<tbody>
 			</table>
 		</div>
-		<br>
-		<button type="button" ng-click="addUser()" class="btn btn-sm btn-success">
+		<button type="button" ng-click="addUser()" class="btn btn-info btn-success">
 			<i class="glyphicon glyphicon-plus"></i> Aggiungi Utente
 		</button>
-		<button type="button" ng-click="exportData()" class="btn btn-sm btn-success">
-			<i class="glyphicon glyphicon-plus"></i> Esporta
+		<button type="button" ng-click="exportProfileExcel()" class="btn btn-sm btn-success">
+			<i class="glyphicon glyphicon-save-file"></i> Esporta Excel
 		</button>
+		<button type="button" ng-click="exportProfilePdf()" class="btn btn-sm">
+			<i class="glyphicon glyphicon-save-file"></i> Esporta Pdf
+		</button>
+		</ion-scroll>
 	</ion-content>
 </ion-view>

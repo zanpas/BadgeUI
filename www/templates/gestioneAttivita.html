@@ -1,34 +1,41 @@
 <ion-view view-title="Gestione Attività">
  	<ion-content padding="true">
-		<div id="exportable">
-			<br>
-			<br>
-			<ion-item class="item-icon-left positive">
-				<i class="icon ion-connection-bars"></i>Attività: {{  }}
-			</ion-item>
+		<ion-scroll zooming="false" direction="xy" scrollbar-x="true" scrollbar-y="true" min-zoom="1" id="scrolly" style="width: 100%; height: 500px;">
+		<div id="exportableActivity" class="gestione">
 			<table ng-table="demo.tableParams" class="table table-condensed table-bordered table-striped" >
+				<br>
+				<br>
 				<tr align="center" style='font-weight:bold;'>
-					<td>NOME</td>
+					<td>NOME ATTIVITÀ</td>
+					<td>STATO</td>
 					<td>DATA INIZIO</td>
 					<td>DATA FINE</td>
-					<td>USER</td>
-					<td>TIPO</td>
-					<td> </td>
+					<td>UTENTI ASSEGNATI</td>
+					<td >ASSEGNA</td>
 				</tr>
 				<tbody align="center">
 				<tr ng-repeat="row in attivita" >
 					<td>{{ row.nome }}</td>
+					<td style="color:red" ng-if="row.stato=='non assegnata'">{{ row.stato }}</td>
+					<td style="color:orange" ng-if="row.stato=='in corso'">{{ row.stato }}</td>
+					<td style="color:blue" ng-if="row.stato=='completata'">{{ row.stato }}</td>
 					<td>{{ row.datainizio }}</td>
 					<td>{{ row.datafine }}</td>
-					<td>{{ }}</td>
-					<td>{{ }}</td>
-					<td><button type="button" ng-click="modifica(row)" class="btn btn-warning">Modifica</button></td>
+					<td >{{ row.utenti }}</td>
+					<td><button type="button" ng-click="assegna(row)" class="btn btn-warning">Assegna</button></td>
 				</tr>
 				<tbody>
 			</table>
 		</div>
-		<button type="button" ng-click="aggiungiAttivita()" class="btn btn-sm btn-success">
-			<i class="glyphicon glyphicon-plus"></i> Aggiungi Attività
-		</button>
+        <button type="button" ng-click="aggiungiAttivita()" class="btn btn-info btn-success">
+            <i class="glyphicon glyphicon-plus"></i> Aggiungi Attività
+        </button>
+        <button type="button" ng-click="exportActivityExcel()" class="btn btn-sm btn-success">
+            <i class="glyphicon glyphicon-save-file"></i> Esporta Excel
+        </button>
+        <button type="button" ng-click="exportActivityPdf()" class="btn btn-sm">
+            <i class="glyphicon glyphicon-save-file"></i> Esporta Pdf
+        </button>
+		</ion-scroll>
 	</ion-content>
 </ion-view>
