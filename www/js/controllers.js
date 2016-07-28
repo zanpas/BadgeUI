@@ -6,7 +6,7 @@ angular.module('badge.controllers', ['ui.calendar','ngGrid'])//, 'ui.bootstrap' 
 
         $rootScope.loginData = {};
 
-        $rootScope.users = [{id: '0', firstname:'super', lastname:'user', username:'super_user', password:'super', profile:'admin'},
+        $rootScope.users = [{id: '0', firstname:'super', lastname:'user', username:'super_user', password:'q', profile:'admin'},
             {id: '1', code:1, firstname:'serena', lastname:'ardissone', username:'sardissone', password:'serena', profile:'user', qualify:'IMP'},
             {id: '2', code:2, firstname:'pasquale', lastname:'zannino', username:'pzannino', password:'pasquale', profile:'user', qualify:'IMP'},
             {id: '3', firstname:'domenico', lastname:'frosina', username:'dfrosina', password:'domenico', profile:'admin', qualify:'DIR'},
