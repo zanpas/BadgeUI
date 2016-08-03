@@ -1,37 +1,56 @@
-<ion-view view-title={{titleHeader}}  >
-  <ion-content padding="true" >
-    <div ng-hide="userLogged" >
-      <h2 align="center" q>Badge Sintegra</a></h2>
-        <form ng-submit="login()">
+﻿<ion-view view-title="Badge Sintegra">
+    <ion-content>
+        <div class="bar bar-subheader bar-stable static text-center">
+            <strong class="title">{{titleHeader}}</strong>
+        </div>
+
+        <div class="im-wrapper" ng-hide="userLogged">
+            <!-- Ionic Components -->
+	        <form ng-submit="login()">
             <div class="list">
                 <label class="item item-input">
-                    <span class="input-label">Username</span>
-                    <input type="text" ng-model="loginData.username">
+                    <h4 class="border-top">
+                        <span class="input-label">Username</span>
+                        <input type="text" ng-model="loginData.username">
+                    </h4>
                 </label>
                 <label class="item item-input">
-                    <span class="input-label">Password</span>
-                    <input type="password" ng-model="loginData.password">
+                    <h4 class="border-top">
+                        <span class="input-label">Password</span>
+                        <input type="password" ng-model="loginData.password">
+                    </h4>
                 </label>
                 <label class="item">
                     <button class="button button-block button-positive" type="submit" >Log in</button>
                 </label>
             </div>
-        </form>
-    </div>
-    <div ng-hide="!userLogged">
-         <ion-item class="item-icon-left positive">
-             <i class="icon ion-android-person"></i>Firstname: {{ userLogged.firstname }}
-         </ion-item>
-         <ion-item class="item-icon-left positive">
-             <i class="icon ion-android-person"></i>Lastname: {{ userLogged.lastname }}
-         </ion-item>
-         <ion-item class="item-icon-left positive">
-             <i class="icon ion-android-person"></i>Username: {{ userLogged.username }}
-         </ion-item>
-         <ion-item class="item-icon-left positive">
-             <i class="icon ion-android-person"></i>Profile: {{ userLogged.profile }}
-         </ion-item>
-    </div>
+			</form>
+			<div ng-hide="!userLogged">
+			 <ion-item class="item-icon-left positive">
+				 <i class="icon ion-android-person"></i>Firstname: {{ userLogged.firstname }}
+			 </ion-item>
+			 <ion-item class="item-icon-left positive">
+				 <i class="icon ion-android-person"></i>Lastname: {{ userLogged.lastname }}
+			 </ion-item>
+			 <ion-item class="item-icon-left positive">
+				 <i class="icon ion-android-person"></i>Username: {{ userLogged.username }}
+			 </ion-item>
+			 <ion-item class="item-icon-left positive">
+				 <i class="icon ion-android-person"></i>Profile: {{ userLogged.profile }}
+			 </ion-item>
+			</div>
+        </div>
+        <div ng-hide="!userLogged">
+            <br>
+            <ion-item class="item-icon-left positive">
+                <i class="icon ion-person"></i>Firstname: {{ userLogged.firstname }} - Lastname: {{ userLogged.lastname }}
+            </ion-item>
+            <ion-item class="item-icon-left positive">
+                <i class="icon ion-archive"></i>Username: {{ userLogged.username }}
+            </ion-item>
+            <ion-item class="item-icon-left positive">
+                <i class="icon ion-crop"></i>Profile: {{ userLogged.profile }}
+            </ion-item>
+        </div>
     </ion-content>
 </ion-view>
-
