@@ -1,10 +1,4 @@
 {
-  "name": "Badge",
-  "app_id": "d2b932ef",
-  "proxies": [
-    {
-      "path": "/calendarevents",
-      "proxyUrl": "http://10.141.133.127:8080/badge-service/rest/calendarevents"
-    }
-  ]
+  "name": "Badge Sintegra",
+  "app_id": "960d4c6c"
 }

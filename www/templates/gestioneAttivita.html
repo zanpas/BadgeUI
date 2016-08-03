@@ -1,6 +1,6 @@
 <ion-view view-title="Gestione Attività">
  	<ion-content padding="true">
-		<ion-scroll zooming="false" direction="xy" scrollbar-x="true" scrollbar-y="true" min-zoom="1" id="scrolly" style="width: 100%; height: 500px;">
+		<ion-scroll zooming="false" direction="xy"  style="width: 100%; height: 100%;">
 		<div id="exportableActivity" class="gestione">
 			<table ng-table="demo.tableParams" class="table table-condensed table-bordered table-striped" >
 				<br>
@@ -30,6 +30,8 @@
         <button type="button" ng-click="aggiungiAttivita()" class="btn btn-info btn-success">
             <i class="glyphicon glyphicon-plus"></i> Aggiungi Attività
         </button>
+		<br>
+		<br>
         <button type="button" ng-click="exportActivityExcel()" class="btn btn-sm btn-success">
             <i class="glyphicon glyphicon-save-file"></i> Esporta Excel
         </button>
