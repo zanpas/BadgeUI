@@ -87,10 +87,12 @@
                         if($scope.newUser.firstname && $scope.newUser.lastname  && $scope.newUser.username  && $scope.newUser.password && $scope.newUser.profile != null) {
                             e.preventDefault();
                             //$rootScope.users.push($rootScope.newUser);
-                            $http.get("http://alessandroscarlato.it/aggiungiUtente.php")
-                                .then(function (response) {
 
-                                });
+                            $http.post('http://alessandroscarlato.it/aggiungiUtente.php',{"firstname":newUser.firstname,"lastname":newUser.lastname,"username":newUser.username,"gender":newUser.password}).success(function(data){
+                                // Stored the returned data into scope
+
+                                $scope.details = data;
+                            });
 
 
 
