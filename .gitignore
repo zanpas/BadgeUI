@@ -1523,3 +1523,6 @@ www/lib/ui.bootstrap/template/typeahead/typeahead-popup.html
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+.gitattributes
+.idea/WS_BADGE_UI.iml
+.io-config.json
