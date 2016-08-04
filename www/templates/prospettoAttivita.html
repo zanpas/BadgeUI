@@ -1,0 +1,25 @@
+<ion-view view-title="Prospetto Attività">
+ 	<ion-content padding="true">
+		<ion-scroll zooming="false" direction="xy"  style="width: 100%; height: 100%;">
+		<div>
+			<table ng-table="demo.tableParams" class="table table-condensed table-bordered table-striped" >
+				<br>
+				<br>
+				<tr align="center" style='font-weight:bold;'>
+					<td>NOME ATTIVITÀ</td>
+					<td>STATO</td>
+					<td>MINUTI LAVORATI</td>
+				</tr>
+				<tbody align="center">
+				<tr ng-repeat="row in attivita" ng-if="row.utenti == loginData.username" >
+					<td>{{ row.nome }}</td>
+					<td style="color:orange" ng-if="row.stato=='in corso'">{{ row.stato }}</td>
+					<td style="color:blue" ng-if="row.stato=='completata'">{{ row.stato }}</td>
+					<td >{{ row.minuti }}</td>
+				</tr>
+				<tbody>
+			</table>
+		</div>
+		</ion-scroll>
+	</ion-content>
+</ion-view>

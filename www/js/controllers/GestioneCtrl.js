@@ -1,12 +1,10 @@
-﻿app.controller('GestioneCtrl', function ($scope, $rootScope, $ionicPopup, $timeout) {
+﻿app.controller('GestioneCtrl', function ($scope, $rootScope, $ionicPopup, $timeout ,$http) {
 
     $scope.exportActivityExcel = function () {
         var blob = new Blob([document.getElementById('exportableActivity').innerHTM], {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
         });
         saveAs(blob, "Attivita.xls");
-
-
 
     };
 

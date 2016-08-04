@@ -59,6 +59,16 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         }
   })
 
+   .state('app.prospettoAttivita', {
+     url: "/prospettoAttivita",
+       views: {
+          'menuContent': {
+              templateUrl: "templates/prospettoAttivita.html",
+              controller: 'ProspettoCtrl'
+           }
+       }
+   })
+
   .state('app.gestioneAttivita', {
     url: "/gestioneAttivita",
     views: {

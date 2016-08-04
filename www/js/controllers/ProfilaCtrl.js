@@ -1,6 +1,9 @@
 ﻿app.controller('ProfilaCtrl', function ($scope, $rootScope, $ionicPopup, $timeout, $http) {
 
+    $scope.esporta = false;
+
     $scope.exportProfileExcel = function () {
+
         var blob = new Blob([document.getElementById('exportableProfile').innerHTML], {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
         });
@@ -47,9 +50,9 @@
                     onTap: function(e) {
                         if($scope.newRow.firstname && $scope.newRow.lastname  && $scope.newRow.profile != null) {
                             e.preventDefault();
-                            $rootScope.users[$scope.profileRow.id].profile = $scope.newRow.profile;
-                            $rootScope.users[$scope.profileRow.id].firstname = $scope.newRow.firstname;
-                            $rootScope.users[$scope.profileRow.id].lastname = $scope.newRow.lastname;
+                            //$rootScope.users[$scope.profileRow.id].profile = $scope.newRow.profile;
+                           // $rootScope.users[$scope.profileRow.id].firstname = $scope.newRow.firstname;
+                            //$rootScope.users[$scope.profileRow.id].lastname = $scope.newRow.lastname;
                             myPopup.close();
                         }
                         else {
@@ -71,8 +74,14 @@
         }, 30000);
     };
 
+    $scope.reset = function (row) {
+        $rootScope.userLogged.password = 'cambia';
+
+    };
+
     $scope.addUser = function() {
         $rootScope.newUser = {};
+        //console.log($rootScope.newUser);
         var myPopup = $ionicPopup.show({
             templateUrl: 'templates/aggiungiUtentePopup.html',
             title: 'Aggiungi nuovo utente',
@@ -86,16 +95,15 @@
                     onTap: function(e) {
                         if($scope.newUser.firstname && $scope.newUser.lastname  && $scope.newUser.username  && $scope.newUser.password && $scope.newUser.profile != null) {
                             e.preventDefault();
+                            console.log($scope.newUser.profile);
                             //$rootScope.users.push($rootScope.newUser);
 
-                            $http.post('http://alessandroscarlato.it/aggiungiUtente.php',{"firstname":newUser.firstname,"lastname":newUser.lastname,"username":newUser.username,"gender":newUser.password}).success(function(data){
-                                // Stored the returned data into scope
-
-                                $scope.details = data;
-                            });
-
-
-
+                            $http.post('http://alessandroscarlato.it/aggiungiUtente.php',
+                                {'nome':$scope.newUser.firstname,"cognome":$scope.newUser.lastname,password:$scope.newUser.password,'profilo':$scope.newUser.profile})
+                                .success(function(data,status,headers,config){
+                                    console.log("ok",data);})
+                                .error(function(data,status,headers,config) {
+                                    console.log("no",data);});
 
                             myPopup.close();
                         }

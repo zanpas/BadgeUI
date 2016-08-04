@@ -5,15 +5,14 @@
             $rootScope.users = response.data.records;
         });
 
+    $http.get("http://alessandroscarlato.it/activityDetails.php")
+        .then(function (response) {
+            $rootScope.attivita = response.data.records;
+        });
+
     $rootScope.titleHeader = 'Login';
 
     $rootScope.loginData = {};
-
-
-    $rootScope.attivita = [{nome: 'Permessi Dipendenti', stato:'non assegnata', datainizio:'20/01/2016', datafine:'29/12/2016' ,utenti:'pzannino,sardissone'},
-        {nome: 'Pagamenti', stato:'in corso', datainizio:'22/01/2012', datafine:'29/06/2012',utenti: 'super_user'},
-        {nome: 'Applicazione mobile', stato:'completata', datainizio:'12/06/2014', datafine:'13/06/2016',utenti:'pzannino'}
-    ];
 
     // Perform the login action when the user submits the login form
     $scope.login = function() {
