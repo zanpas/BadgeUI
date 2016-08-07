@@ -102,6 +102,7 @@
         for (var i = 0; i < $rootScope.users.length; i++) {
             if($rootScope.users[i].username==$scope.profileRow.username) {
                 $rootScope.users[i].password = 'cambia';
+                $http.post("http://alessandroscarlato.it/resetPassword.php",{'user':$rootScope.userLogged.username,'pass':$rootScope.userLogged.password})
             }
         }
     };
@@ -125,15 +126,10 @@
                             console.log($scope.newUser.profile);
                             $rootScope.users.push($rootScope.newUser);
 
-                            $http.post("http://alessandroscarlato.it/aggiungiUtente.php")
- /*
-                            $http.post("http://alessandroscarlato.it/aggiungiUtente.php",
-                                {'nome':$scope.newUser.firstname,"cognome":$scope.newUser.lastname,password:$scope.newUser.password,'profilo':$scope.newUser.profile})
-                                .success(function(data,status,headers,config){
-                                    console.log("ok",data);})
-                                .error(function(data,status,headers,config) {
-                                    console.log("no",data);});
-*/
+                            $http.post("http://alessandroscarlato.it/aggiungiUtente.php",{'nome':$scope.newUser.firstname,"cognome":$scope.newUser.lastname,
+                                'user':$scope.newUser.username,'pass':$scope.newUser.password,'profilo':$scope.newUser.profile})
+
+
                             myPopup.close();
                         }
                         else {
