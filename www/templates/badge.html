@@ -1,9 +1,4 @@
 <ion-view view-title="Badge">
-	<div align="center">
-		<form name="formOrologio">
-			<input type="text" name="textOrologio" class="stileOrologio" onFocus="this.blur()" onSelectStart="return false;">
-		</form>
-	</div>
 	<ion-content padding="true">
 		<ion-item class="item-icon-left positive">
 			<i class="icon ion-android-person"></i>Utente: {{ loginData.username }}
@@ -13,9 +8,6 @@
 		</ion-item>
 		<ion-item class="item-icon-left positive">
 			<i class="icon ion-clock"></i>Time: {{date | date:'HH:mm'}}
-		</ion-item>
-		<ion-item class="item-icon-left positive">
-			<i class="icon ion-android-person"></i>Stato: {{ started }}
 		</ion-item>
 		<br>
 		<ion-item class="item-icon-left positive" ng-if="!started && !pranzo" ng-click="start()">
@@ -30,6 +22,5 @@
 		<ion-item class="item-icon-left positive" ng-if="started && pranzo" ng-click="finePausa()">
 			<i class="icon ion-ios-pause"></i>Fine pausa pranzo
 		</ion-item>
-
 	</ion-content>
 </ion-view>

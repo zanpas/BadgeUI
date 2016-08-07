@@ -27,10 +27,11 @@
                             });
                         }
                         else {
-                            $http.get("http://alessandroscarlato.it/modifyPassword.php")
-                                .then(function (response) {
-                                    //$rootScope.users = response.data.records;
-                                });
+                            $rootScope.userLogged.password = $scope.loginData.newPassword2;
+
+                            //$http.post("http://alessandroscarlato.it/modifyPassword.php",{"username":$rootScope.userLogged.username})
+                            $http.post("http://alessandroscarlato.it/modifyPassword.php")
+
                             console.log('Cambiata', $scope.loginData.newPassword2);
                         }
                     }

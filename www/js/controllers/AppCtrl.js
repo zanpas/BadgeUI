@@ -21,7 +21,7 @@
         for (var i = 0; i < $rootScope.users.length; i++) {
             if($rootScope.users[i].username==$rootScope.loginData.username && $rootScope.users[i].password==$rootScope.loginData.password){
                 $rootScope.userLogged = $rootScope.users[i];
-                console.log('ok')
+                //console.log($rootScope.userLogged)
             }
         };
 

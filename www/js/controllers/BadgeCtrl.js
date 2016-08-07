@@ -59,7 +59,11 @@
                                 $scope.totaleOre=$scope.uscitaOra-$scope.entrataOra;
                                 $scope.totaleMinuti=$scope.uscitaMinuti-$scope.entrataMinuti;
                             }
-                            console.log($scope.totaleOre , $scope.totaleMinuti ,$scope.newRow.event);
+
+                            for (var i = 0; i < $scope.totaleOres; i++) {
+                                $scope.totaleMinuti += 60;
+                            }
+                            console.log($scope.totaleMinuti ,$scope.newRow.event);
                             if($scope.newRow.event == "Pausa pranzo") {
                                 $scope.pranzo = true;
                                 $scope.max = true;
@@ -76,6 +80,13 @@
                                     title: 'Scegli dove scaricare le ore',
                                     templateUrl: 'templates/badgeScaricoOrePopup.html'
                                 });
+                                for (var i = 0; i < $rootScope.attivita.length; i++) {
+                                    if($rootScope.attivita[i].utenti == $rootScope.userLogged.username) {
+                                        console.log($rootScope.attivita[i].nome);
+                                        $rootScope.attivita[i].minuti += $scope.totaleMinuti;
+                                    }
+                                }
+                                //$rootScope.attivita
                             }
                             myPopup.close();
                         }

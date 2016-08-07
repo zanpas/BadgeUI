@@ -26,8 +26,10 @@
     };
 
     $scope.modifica = function (row) {
-        $scope.profileRow = row;
+
         $scope.newRow = {};
+        $scope.profileRow = row;
+
         $scope.other2 = 'manager';
         $scope.other3 = 'user';
         if($scope.profileRow.profile == 'manager') {
@@ -50,9 +52,29 @@
                     onTap: function(e) {
                         if($scope.newRow.firstname && $scope.newRow.lastname  && $scope.newRow.profile != null) {
                             e.preventDefault();
-                            //$rootScope.users[$scope.profileRow.id].profile = $scope.newRow.profile;
-                           // $rootScope.users[$scope.profileRow.id].firstname = $scope.newRow.firstname;
-                            //$rootScope.users[$scope.profileRow.id].lastname = $scope.newRow.lastname;
+
+                            for (var i = 0; i < $rootScope.users.length; i++) {
+                                if($rootScope.users[i].username==$scope.profileRow.username) {
+                                    $rootScope.users[i].firstname = $scope.newRow.firstname;
+                                    $rootScope.users[i].lastname = $scope.newRow.lastname;
+                                    $rootScope.users[i].profile = $scope.newRow.profile;
+                                }
+                            }
+/*
+                            $http.post("http://alessandroscarlato.it/modifyUser.php",
+                                {'username':$scope.profileRow.username,'firstname':$scope.newRow.firstname,'lastname':$scope.newRow.lastname,'profile':$scope.newRow.profile})
+                                .success(function(data,status,headers,config){
+                                    console.log("ok",data);
+                                     for (var i = 0; i < $rootScope.users.length; i++) {
+                                     if($rootScope.users[i].username==$scope.profileRow.username) {
+                                     $rootScope.users[i].firstname = $scope.newRow.firstname;
+                                     $rootScope.users[i].lastname = $scope.newRow.lastname;
+                                     $rootScope.users[i].profile = $scope.newRow.profile;
+ }
+ }
+                                })
+*/
+
                             myPopup.close();
                         }
                         else {
@@ -75,8 +97,13 @@
     };
 
     $scope.reset = function (row) {
+        $scope.profileRow = row;
         $rootScope.userLogged.password = 'cambia';
-
+        for (var i = 0; i < $rootScope.users.length; i++) {
+            if($rootScope.users[i].username==$scope.profileRow.username) {
+                $rootScope.users[i].password = 'cambia';
+            }
+        }
     };
 
     $scope.addUser = function() {
@@ -96,15 +123,17 @@
                         if($scope.newUser.firstname && $scope.newUser.lastname  && $scope.newUser.username  && $scope.newUser.password && $scope.newUser.profile != null) {
                             e.preventDefault();
                             console.log($scope.newUser.profile);
-                            //$rootScope.users.push($rootScope.newUser);
+                            $rootScope.users.push($rootScope.newUser);
 
-                            $http.post('http://alessandroscarlato.it/aggiungiUtente.php',
+                            $http.post("http://alessandroscarlato.it/aggiungiUtente.php")
+ /*
+                            $http.post("http://alessandroscarlato.it/aggiungiUtente.php",
                                 {'nome':$scope.newUser.firstname,"cognome":$scope.newUser.lastname,password:$scope.newUser.password,'profilo':$scope.newUser.profile})
                                 .success(function(data,status,headers,config){
                                     console.log("ok",data);})
                                 .error(function(data,status,headers,config) {
                                     console.log("no",data);});
-
+*/
                             myPopup.close();
                         }
                         else {
