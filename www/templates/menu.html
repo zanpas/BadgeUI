@@ -29,16 +29,16 @@
           <i class="icon ion-card" ></i>Badge
         </ion-item>
 
-        <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/profila" ng-show="userLogged.profile=='admin'">
-          <i class="icon ion-clipboard"></i>Profila Utente
-        </ion-item>
-
         <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/prospettoAttivita" ng-show="userLogged">
           <i class="icon ion-arrow-graph-up-right"></i>Prospetto Attività
         </ion-item>
 
-        <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/gestioneAttivita" ng-show="userLogged.profile=='admin' || userLogged.profile=='manager'">
+       <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/gestioneAttivita" ng-show="userLogged.profile=='admin' || userLogged.profile=='manager'">
           <i class="icon ion-ios-list"></i>Gestione Attività
+       </ion-item>
+
+        <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/profila" ng-show="userLogged.profile=='admin'">
+          <i class="icon ion-clipboard"></i>Profila Utente
         </ion-item>
 
         <ion-item nav-clear menu-close class="item-icon-left positive" href="#/app/modificaPassword" ng-show="userLogged">

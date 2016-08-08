@@ -43,21 +43,19 @@
                     onTap: function(e) {
                         if($scope.newRow.utente != null) {
                             e.preventDefault();
-
                             for (var i = 0; i < $rootScope.attivita.length; i++) {
                                 if($rootScope.attivita[i].nome == $scope.attivitaRow.nome){
                                     if($rootScope.attivita[i].utenti == null) {
                                         $rootScope.attivita[i].utenti = $scope.newRow.utente;
                                     }
                                     else {
-                                        $rootScope.attivita[i].utenti += ',';
+                                        $rootScope.attivita[i].utenti += ' ';
                                         $rootScope.attivita[i].utenti = $rootScope.attivita[i].utenti.concat($scope.newRow.utente);
                                     }
+                                    //$rootScope.attivita[i].stato = 'assegnata';
+                                    $http.post("http://alessandroscarlato.it/assegnaActivity.php",{'name':$scope.attivitaRow.nome,'users':$rootScope.attivita[i].utenti})
 
-                                    //$rootScope.attivita[i].utenti.concat($rootScope.attivita[i].utenti,$scope.newRow.utente);
-                                    //$rootScope.attivita[i].utenti.concat(($rootScope.attivita.data , 'ciao');
                                     console.log('lavorano ', $rootScope.attivita[i].utenti);
-                                    // $rootScope.attivita.push($scope.newRow.utente);
                                 }
 
                             };
@@ -98,11 +96,12 @@
                     text: '<b>Aggiungi</b>',
                     type: 'button-positive',
                     onTap: function(e) {
-                        if($scope.newAttivita.nome && $scope.newAttivita.datainizio && $scope.newAttivita.datafine   != null) {
+                        if($scope.newAttivita.nome && $scope.newAttivita.datainizio != null) {
                             e.preventDefault();
                             $scope.newAttivita.stato = 'non assegnata';
                             console.log('Attivita', $scope.newAttivita);
                             $rootScope.attivita.push($scope.newAttivita);
+                            $http.post("http://alessandroscarlato.it/addActivity.php",{'nome':$scope.newAttivita.nome,'inizio':$scope.newAttivita.datainizio})
                             myPopup.close();
                         }
                         else {

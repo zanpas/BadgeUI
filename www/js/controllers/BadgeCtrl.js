@@ -1,4 +1,4 @@
-﻿app.controller('BadgeCtrl', function ($scope, $rootScope ,$ionicPopup, $timeout) {
+﻿app.controller('BadgeCtrl', function ($scope, $rootScope ,$ionicPopup, $timeout, $http) {
 
     $scope.started = false;
     $scope.pranzo = false;
@@ -48,22 +48,6 @@
                     onTap: function(e) {
                         if($scope.newRow.event != null) {
                             e.preventDefault();
-                            $scope.started = false;
-                            if($scope.uscitaMinuti<$scope.entrataMinuti) {
-                                $scope.parzialeOre=$scope.uscitaOra-$scope.entrataOra;
-                                $scope.totaleOre=$scope.parzialeOre-1;
-                                $scope.parzialeMinuti=60-$scope.entrataMinuti;
-                                $scope.totaleMinuti=$scope.parzialeMinuti+$scope.uscitaMinuti
-                            }
-                            else {
-                                $scope.totaleOre=$scope.uscitaOra-$scope.entrataOra;
-                                $scope.totaleMinuti=$scope.uscitaMinuti-$scope.entrataMinuti;
-                            }
-
-                            for (var i = 0; i < $scope.totaleOres; i++) {
-                                $scope.totaleMinuti += 60;
-                            }
-                            console.log($scope.totaleMinuti ,$scope.newRow.event);
                             if($scope.newRow.event == "Pausa pranzo") {
                                 $scope.pranzo = true;
                                 $scope.max = true;
@@ -76,6 +60,23 @@
                                 });
                             }
                             if($scope.newRow.event == "Fine giornata lavorativa") {
+                                $scope.started = false;
+                                if($scope.uscitaMinuti<$scope.entrataMinuti) {
+                                    $scope.parzialeOre=$scope.uscitaOra-$scope.entrataOra;
+                                    $scope.totaleOre=$scope.parzialeOre-1;
+                                    $scope.parzialeMinuti=60-$scope.entrataMinuti;
+                                    $scope.totaleMinuti=$scope.parzialeMinuti+$scope.uscitaMinuti
+                                }
+                                else {
+                                    $scope.totaleOre=$scope.uscitaOra-$scope.entrataOra;
+                                    $scope.totaleMinuti=$scope.uscitaMinuti-$scope.entrataMinuti;
+                                }
+
+                                for (var i = 0; i < $scope.totaleOres; i++) {
+                                    $scope.totaleMinuti += 60;
+                                }
+                                console.log($scope.totaleMinuti ,$scope.newRow.event);
+
                                 var alertPopup = $ionicPopup.alert({
                                     title: 'Scegli dove scaricare le ore',
                                     templateUrl: 'templates/badgeScaricoOrePopup.html'
@@ -86,6 +87,7 @@
                                         $rootScope.attivita[i].minuti += $scope.totaleMinuti;
                                     }
                                 }
+                                $http.post("http://alessandroscarlato.it/scaricoBadge.php",{'activity':$scope.newRow.activity,'minutes':$scope.totaleMinuti})
                                 //$rootScope.attivita
                             }
                             myPopup.close();

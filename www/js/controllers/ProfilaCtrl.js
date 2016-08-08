@@ -52,6 +52,7 @@
                     onTap: function(e) {
                         if($scope.newRow.firstname && $scope.newRow.lastname  && $scope.newRow.profile != null) {
                             e.preventDefault();
+                            $http.post("http://alessandroscarlato.it/modificaUtente.php",{'user':$scope.profileRow.username,'nome':$scope.newRow.firstname,'cognome':$scope.newRow.lastname,'profilo':$scope.newRow.profile})
 
                             for (var i = 0; i < $rootScope.users.length; i++) {
                                 if($rootScope.users[i].username==$scope.profileRow.username) {
@@ -60,20 +61,6 @@
                                     $rootScope.users[i].profile = $scope.newRow.profile;
                                 }
                             }
-/*
-                            $http.post("http://alessandroscarlato.it/modifyUser.php",
-                                {'username':$scope.profileRow.username,'firstname':$scope.newRow.firstname,'lastname':$scope.newRow.lastname,'profile':$scope.newRow.profile})
-                                .success(function(data,status,headers,config){
-                                    console.log("ok",data);
-                                     for (var i = 0; i < $rootScope.users.length; i++) {
-                                     if($rootScope.users[i].username==$scope.profileRow.username) {
-                                     $rootScope.users[i].firstname = $scope.newRow.firstname;
-                                     $rootScope.users[i].lastname = $scope.newRow.lastname;
-                                     $rootScope.users[i].profile = $scope.newRow.profile;
- }
- }
-                                })
-*/
 
                             myPopup.close();
                         }
@@ -98,10 +85,14 @@
 
     $scope.reset = function (row) {
         $scope.profileRow = row;
-        $rootScope.userLogged.password = 'cambia';
+        $rootScope.userLogged.password = 'default';
         for (var i = 0; i < $rootScope.users.length; i++) {
             if($rootScope.users[i].username==$scope.profileRow.username) {
-                $rootScope.users[i].password = 'cambia';
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Password resettata',
+                    template: 'Password: default'
+                });
+                $rootScope.users[i].password = 'default';
                 $http.post("http://alessandroscarlato.it/resetPassword.php",{'user':$rootScope.userLogged.username,'pass':$rootScope.userLogged.password})
             }
         }
@@ -124,12 +115,11 @@
                         if($scope.newUser.firstname && $scope.newUser.lastname  && $scope.newUser.username  && $scope.newUser.password && $scope.newUser.profile != null) {
                             e.preventDefault();
                             console.log($scope.newUser.profile);
-                            $rootScope.users.push($rootScope.newUser);
 
                             $http.post("http://alessandroscarlato.it/aggiungiUtente.php",{'nome':$scope.newUser.firstname,"cognome":$scope.newUser.lastname,
                                 'user':$scope.newUser.username,'pass':$scope.newUser.password,'profilo':$scope.newUser.profile})
 
-
+                            $rootScope.users.push($rootScope.newUser);
                             myPopup.close();
                         }
                         else {
