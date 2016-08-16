@@ -4,6 +4,7 @@
     $scope.pranzo = false;
     $scope.max = false;
     $scope.permesso = false;
+    $scope.giorno = false;
     $scope.date = new Date();
 
     $scope.start = function(){
@@ -17,11 +18,6 @@
     $scope.ripresaPausa = function(){
         $scope.pranzo = false;
         $scope.started = true;
-    }
-
-    $scope.finePausa = function(){
-        $scope.pranzo = false;
-        $scope.started = false;
     }
 
     $scope.stop = function (row) {
@@ -53,6 +49,7 @@
                                 $scope.max = true;
                             }
                             if($scope.newRow.event == "Richiesta permesso") {
+                                $scope.pranzo = true;
                                 $scope.permesso = true;
                                 var alertPopup = $ionicPopup.alert({
                                     title: 'Hai richiesto un permesso',
@@ -61,6 +58,7 @@
                             }
                             if($scope.newRow.event == "Fine giornata lavorativa") {
                                 $scope.started = false;
+                                $scope.giorno = true;
                                 if($scope.uscitaMinuti<$scope.entrataMinuti) {
                                     $scope.parzialeOre=$scope.uscitaOra-$scope.entrataOra;
                                     $scope.totaleOre=$scope.parzialeOre-1;
@@ -75,7 +73,7 @@
                                 for (var i = 0; i < $scope.totaleOres; i++) {
                                     $scope.totaleMinuti += 60;
                                 }
-                                console.log($scope.totaleMinuti ,$scope.newRow.event);
+
 
                                 var alertPopup = $ionicPopup.alert({
                                     title: 'Scegli dove scaricare le ore',
@@ -84,11 +82,13 @@
                                 for (var i = 0; i < $rootScope.attivita.length; i++) {
                                     if($rootScope.attivita[i].utenti == $rootScope.userLogged.username) {
                                         console.log($rootScope.attivita[i].nome);
+                                        console.log($scope.totaleMinuti ,$rootScope.attivita[i].nome);
+                                        $http.post("http://alessandroscarlato.it/scaricoBadge.php",{'activity':$rootScope.attivita[i].nome,'minutes':$scope.totaleMinuti})
+
                                         $rootScope.attivita[i].minuti += $scope.totaleMinuti;
                                     }
                                 }
-                                $http.post("http://alessandroscarlato.it/scaricoBadge.php",{'activity':$scope.newRow.activity,'minutes':$scope.totaleMinuti})
-                                //$rootScope.attivita
+
                             }
                             myPopup.close();
                         }

@@ -1,6 +1,6 @@
 <form>
    <span class="input-label">Opzioni</span>
-   <select type="text"  ng-model="newRow.activity" >
+   <select type="text" ng-model="newRow.activity" >
       <option selected="selected" ng-repeat="row in attivita" ng-if="row.utenti == loginData.username">{{ row.nome }}</option>
    </select>
 </form>
