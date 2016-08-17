@@ -1,10 +1,10 @@
 <ion-view view-title="Profila">
 	<ion-content padding="true">
 		<ion-scroll zooming="false" direction="xy"  style="width: 100%; height: 100%;">
-		<div id="exportableProfile" class="profila">
+		<div  class="profila">
 			<br>
 			<br>
-			<table ng-table="demo.tableParams" class="table table-condensed table-bordered table-striped" >
+			<table id="exportableProfile" ng-table="demo.tableParams" class="table table-condensed table-bordered table-striped" >
 				<tr align="center" style='font-weight:bold;'>
 					<td>NOME</td>
 					<td>COGNOME</td>
@@ -32,7 +32,7 @@
 		</button>
 		<br>
 		<br>
-		<button type="button" ng-click="exportProfileExcel()" class="btn btn-sm btn-success">
+		<button type="button" onclick="tableToExcel('exportableProfile','Profili')" value="Export to Excel" class="btn btn-sm btn-success" >
 			<i class="glyphicon glyphicon-save-file"></i> Esporta Excel
 		</button>
 		<button type="button" ng-click="exportProfilePdf()" class="btn btn-sm">

@@ -1,14 +1,13 @@
 ﻿app.controller('ProfilaCtrl', function ($scope, $rootScope, $ionicPopup, $timeout, $http) {
 
-    $scope.esporta = false;
-
+    /*
     $scope.exportProfileExcel = function () {
-
         var blob = new Blob([document.getElementById('exportableProfile').innerHTML], {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
         });
         saveAs(blob, "Profili.xls");
     };
+    */
 
     $scope.exportProfilePdf = function () {
         html2canvas(document.getElementById('exportableProfile'), {

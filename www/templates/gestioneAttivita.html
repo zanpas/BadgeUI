@@ -1,8 +1,8 @@
 <ion-view view-title="Gestione Attività">
  	<ion-content padding="true">
 		<ion-scroll zooming="false" direction="xy"  style="width: 100%; height: 100%;">
-		<div id="exportableActivity" class="gestione">
-			<table ng-table="demo.tableParams" class="table table-condensed table-bordered table-striped" >
+		<div  class="gestione">
+			<table ng-table="demo.tableParams" class="table table-condensed table-bordered table-striped" id="exportableActivity">
 				<br>
 				<br>
 				<tr align="center" style='font-weight:bold;'>
@@ -34,7 +34,7 @@
         </button>
 		<br>
 		<br>
-        <button type="button" ng-click="exportActivityExcel()" class="btn btn-sm btn-success">
+        <button type="button" onclick="tableToExcel('exportableActivity','Attività')" value="Export to Excel" class="btn btn-sm btn-success">
             <i class="glyphicon glyphicon-save-file"></i> Esporta Excel
         </button>
         <button type="button" ng-click="exportActivityPdf()" class="btn btn-sm">
